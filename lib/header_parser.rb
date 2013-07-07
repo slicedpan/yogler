@@ -1,6 +1,10 @@
+require 'ffi'
+require 'strscan'
+
 module Yogler
   module HeaderParser
     def self.parse_header(filename, module_name)
+      ss = StringScanner.new(File.open(filename).read)
     end
     def self.create_module(module_name, lib_name, c_functions)
       function_string = ""

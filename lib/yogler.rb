@@ -1,4 +1,5 @@
-require_relative 'glfw_lib'
+$:.push File.dirname(__FILE__)
+require 'glfw_lib'
 
 module Yogler
   class Engine
