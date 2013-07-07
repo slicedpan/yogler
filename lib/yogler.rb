@@ -1,5 +1,6 @@
 $:.push File.dirname(__FILE__)
 require 'glfw_lib'
+require 'header_parser'
 
 module Yogler
   class Engine
