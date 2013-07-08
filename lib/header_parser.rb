@@ -1,6 +1,6 @@
 module Yogler
   module HeaderParser
-    def self.parse_header(filename, module_name)
+    def self.parse_header(filename, module_name, function_names)
     end
     def self.create_module(module_name, lib_name, c_functions)
       function_string = ""

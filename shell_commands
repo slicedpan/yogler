@@ -1,0 +1,1 @@
+nm /usr/lib/libglfw.so -g -f 'posix' | grep 'glfw' | awk -e '{ print $1 }' > filename
