@@ -1,0 +1,14 @@
+glfw:
+  lib_name: "glfw"
+  header_filename: "glfw3-preprocessed"
+  module_name: "GLFW"
+  prefix: "glfw"
+  function_list_filename: "glfw_funcs"
+  
+    
+glew:
+  lib_name: "GLEW"
+  header_filename: "glew-preprocessed"
+  module_name: "GLEW"
+  prefix: "glew"
+  function_list_filename: "glew_funcs"

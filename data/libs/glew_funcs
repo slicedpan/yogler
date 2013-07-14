@@ -1,0 +1,10 @@
+glewInit
+glewGetString
+_fini
+glxewGetExtension
+_init
+glxewIsSupported
+glewGetErrorString
+glewIsSupported
+glewGetExtension
+glxewContextInit

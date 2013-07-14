@@ -1,0 +1,92 @@
+ int glfwInit(void);
+# 899 "glfw3.h"
+ void glfwTerminate(void);
+# 919 "glfw3.h"
+ void glfwGetVersion(int* major, int* minor, int* rev);
+# 949 "glfw3.h"
+ const char* glfwGetVersionString(void);
+# 974 "glfw3.h"
+ GLFWerrorfun glfwSetErrorCallback(GLFWerrorfun cbfun);
+# 996 "glfw3.h"
+ GLFWmonitor** glfwGetMonitors(int* count);
+# 1009 "glfw3.h"
+ GLFWmonitor* glfwGetPrimaryMonitor(void);
+# 1022 "glfw3.h"
+ void glfwGetMonitorPos(GLFWmonitor* monitor, int* xpos, int* ypos);
+# 1041 "glfw3.h"
+ void glfwGetMonitorPhysicalSize(GLFWmonitor* monitor, int* width, int* height);
+# 1057 "glfw3.h"
+ const char* glfwGetMonitorName(GLFWmonitor* monitor);
+# 1075 "glfw3.h"
+ GLFWmonitorfun glfwSetMonitorCallback(GLFWmonitorfun cbfun);
+# 1099 "glfw3.h"
+ const GLFWvidmode* glfwGetVideoModes(GLFWmonitor* monitor, int* count);
+# 1117 "glfw3.h"
+ const GLFWvidmode* glfwGetVideoMode(GLFWmonitor* monitor);
+# 1129 "glfw3.h"
+ void glfwSetGamma(GLFWmonitor* monitor, float gamma);
+# 1143 "glfw3.h"
+ const GLFWgammaramp* glfwGetGammaRamp(GLFWmonitor* monitor);
+# 1156 "glfw3.h"
+ void glfwSetGammaRamp(GLFWmonitor* monitor, const GLFWgammaramp* ramp);
+# 1169 "glfw3.h"
+ void glfwDefaultWindowHints(void);
+# 1191 "glfw3.h"
+ void glfwWindowHint(int target, int hint);
+# 1244 "glfw3.h"
+ GLFWwindow* glfwCreateWindow(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share);
+# 1266 "glfw3.h"
+ void glfwDestroyWindow(GLFWwindow* window);
+# 1277 "glfw3.h"
+ int glfwWindowShouldClose(GLFWwindow* window);
+# 1290 "glfw3.h"
+ void glfwSetWindowShouldClose(GLFWwindow* window, int value);
+# 1304 "glfw3.h"
+ void glfwSetWindowTitle(GLFWwindow* window, const char* title);
+# 1321 "glfw3.h"
+ void glfwGetWindowPos(GLFWwindow* window, int* xpos, int* ypos);
+# 1353 "glfw3.h"
+ void glfwSetWindowPos(GLFWwindow* window, int xpos, int ypos);
+# 1370 "glfw3.h"
+ void glfwGetWindowSize(GLFWwindow* window, int* width, int* height);
+# 1394 "glfw3.h"
+ void glfwSetWindowSize(GLFWwindow* window, int width, int height);
+# 1411 "glfw3.h"
+ void glfwGetFramebufferSize(GLFWwindow* window, int* width, int* height);
+# 1428 "glfw3.h"
+ void glfwIconifyWindow(GLFWwindow* window);
+# 1445 "glfw3.h"
+ void glfwRestoreWindow(GLFWwindow* window);
+# 1461 "glfw3.h"
+ void glfwShowWindow(GLFWwindow* window);
+# 1477 "glfw3.h"
+ void glfwHideWindow(GLFWwindow* window);
+# 1489 "glfw3.h"
+ GLFWmonitor* glfwGetWindowMonitor(GLFWwindow* window);
+# 1503 "glfw3.h"
+ int glfwGetWindowAttrib(GLFWwindow* window, int attrib);
+# 1518 "glfw3.h"
+ void glfwSetWindowUserPointer(GLFWwindow* window, void* pointer);
+# 1531 "glfw3.h"
+ void* glfwGetWindowUserPointer(GLFWwindow* window);
+# 1547 "glfw3.h"
+ GLFWwindowposfun glfwSetWindowPosCallback(GLFWwindow* window, GLFWwindowposfun cbfun);
+# 1563 "glfw3.h"
+ GLFWwindowsizefun glfwSetWindowSizeCallback(GLFWwindow* window, GLFWwindowsizefun cbfun);
+# 1587 "glfw3.h"
+ GLFWwindowclosefun glfwSetWindowCloseCallback(GLFWwindow* window, GLFWwindowclosefun cbfun);
+# 1611 "glfw3.h"
+ GLFWwindowrefreshfun glfwSetWindowRefreshCallback(GLFWwindow* window, GLFWwindowrefreshfun cbfun);
+# 1631 "glfw3.h"
+ GLFWwindowfocusfun glfwSetWindowFocusCallback(GLFWwindow* window, GLFWwindowfocusfun cbfun);
+# 1646 "glfw3.h"
+ GLFWwindowiconifyfun glfwSetWindowIconifyCallback(GLFWwindow* window, GLFWwindowiconifyfun cbfun);
+# 1661 "glfw3.h"
+ GLFWframebuffersizefun glfwSetFramebufferSizeCallback(GLFWwindow* window, GLFWframebuffersizefun cbfun);
+# 1686 "glfw3.h"
+ void glfwPollEvents(void);
+# 1713 "glfw3.h"
+ void glfwWaitEvents(void);
+# 1725 "glfw3.h"
+ int glfwGetInputMode(GLFWwindow* window, int mode);
+# 1760 "glfw3.h"

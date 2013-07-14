@@ -1,1 +1,1 @@
-irb -r ./lib/yogler.rb
+irb -r ./lib/yogler.rb -r ./test/fixtures.rb -I ./
