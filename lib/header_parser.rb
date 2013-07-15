@@ -20,10 +20,17 @@ module Yogler
   PTR_REGEX = /^.*\*$/
   
   
-
   class HeaderParser
     
     attr_accessor :typedefs, :type_conv, :callbacks
+    
+    TESTING = true
+    
+    def debug(arg)
+      if TESTING
+        puts arg
+      end
+    end
   
     def initialize(opts) 
       @typedefs = []     
@@ -40,7 +47,7 @@ module Yogler
       end
       
       @type_conv = {}
-      @callbacks = []
+      @callbacks = {}
       
       @module_name = opts['module_name']
       @function_names = opts['function_list']
@@ -49,57 +56,91 @@ module Yogler
     end
     
     def check_callback(type)
-      i = @typedefs.find_index { |l| l.match(Regexp.new("( * #{type})")) }
+      return type if @callbacks.keys.include? type
+      i = @typedefs.find_index { |l| l.match(Regexp.new("\\( \\* #{type}\\)")) }
       if i.nil?
-        puts "callback <#{type}> not found"
+        debug "callback <#{type}> not found"
       else
         ret_type = ""
-        puts @typedefs[i]
+        debug @typedefs[i]
         line_text = @typedefs[i].dup
         line_text.gsub!("typedef ", "")
         ret_type = line_text.match(/([^\(]*)\( \* /)[1]
-        puts ret_type
-        ffi_type ret_type
+        debug ret_type
+        ret_c_type = ffi_type ret_type.split(" ")
+        args = line_text.match(Regexp.new("\\( \\* #{type}\\) \\(([^\\)]*)\\);"))[1].split(", ")
+        c_args = []
+        args.each do |arg|
+          tokens = arg.split(" ")
+          var_name = tokens.pop
+          if var_name.include? '*'
+            tokens.push('*')
+          end
+          c_args.push(ffi_type(tokens))
+        end        
+        debug "c_args: #{c_args}"
+        
+        @callbacks[type] = {:name => type.downcase, :args => c_args, :ret_type => ret_c_type}
+        
+        return type.downcase
+        
       end
     end
     
     def try_resolve_type(c_type)
       return @type_conv[c_type] if @type_conv.keys.include? c_type
-      i = @typedefs.find_index { |l| l.match(Regexp.new("#{c_type};$")) }
+      re = Regexp.new("#{c_type};$")
+      matching_line = nil
+      debug re
+      i = @typedefs.find_index do |l| 
+        if l.match re
+          debug "#{l} matches #{re}"
+          matching_line = l
+          true
+        else
+          false
+        end
+      end
       
       check_callback(c_type)
       
-      if i.nil?
-        puts "no match found for #{c_type}"
+      if matching_line.nil?
+        debug "no match found for #{c_type}"
         nil
       else
-        puts "#{@header_lines[i]} has a typedef for #{c_type}"
-        tokens = @header_lines[i].split(" ")
+        debug "#{matching_line} has a typedef for #{c_type}"
+        tokens = matching_line.split(" ")
         tokens.pop
         tokens.shift
         ret_type = ffi_type(tokens)
         if ret_type.nil?
-          puts "could not resolve type"
+          debug "could not resolve type"
         else
-          puts "resolved to #{ret_type}"
+          debug "resolved to #{ret_type}"
           @type_conv[c_type] = ret_type
         end
         ret_type
       end      
     end
 
-    def ffi_type(c_type)
-      c_type = c_type[0] if c_type.class == Array && c_type.length == 1
-      puts "testing #{c_type}"
-      if c_type.class.to_s == "String"
+    def ffi_type(c_type)      
+      debug "c_type orig: #{c_type}"
+      if c_type.kind_of? Array and c_type.length == 1
+        c_type = c_type[0]
+      end
+      debug "testing #{c_type}"
+      if c_type.kind_of? String
         if c_type =~ PTR_REGEX
           "pointer"
         elsif TYPE_SAME.include? c_type
           c_type
+        else
+          debug "resolving #{c_type}"
+          try_resolve_type c_type
         end
-      elsif c_type.class.to_s == "Array"        
+      elsif c_type.kind_of? Array       
         type_name = ffi_type c_type.pop
-        puts "base type: #{type_name}"
+        debug "base type: #{type_name}"
         return type_name if type_name == "pointer"
         if c_type.include? "unsigned"
           return "u#{type_name}"          
@@ -129,15 +170,17 @@ module Yogler
 
     def parse
       @function_names.each do |f_n|
-        @header_lines.each do |t| 
-          if t.match f_n
+        debug "match string: ' #{f_n}'"
+        @header_lines.each do |t|
+ 
+          if t.match " #{f_n}"
           
-            puts "matched #{t}"
+            debug "matched #{t}"
           
             ret_c_type = t.split(f_n)[0].lstrip.rstrip
             ret_type = ffi_type(ret_c_type) || try_resolve_type(ret_c_type)
             next if ret_type.nil?
-            #puts "orig: <#{ret_c_type}>, ffi: <#{ret_type}>"
+            #debug "orig: <#{ret_c_type}>, ffi: <#{ret_type}>"
             ffi_args = []
             
             should_continue = true
@@ -147,7 +190,8 @@ module Yogler
               c_args.each do |c_a|
                 tokens = c_a.split(" ")
                 break if tokens.nil?                
-                tokens.pop
+                var_name = tokens.pop
+                tokens.push('*') if var_name.include? '*'
                 arg_ffi_type = ffi_type(tokens) || try_resolve_type(tokens)
                 if arg_ffi_type.nil?
                   should_continue = false
@@ -159,19 +203,19 @@ module Yogler
             
             r_name = f_n.dup
             
-            puts "prefix: #{@prefix}"
+            debug "prefix: #{@prefix}"
             
             if !@prefix.nil?
-              puts "r_name before: #{r_name}"
+              debug "r_name before: #{r_name}"
               r_name.gsub!(@prefix, "")
-              puts "r_name after: #{r_name}"
+              debug "r_name after: #{r_name}"
             end
             
             r_name = r_name.snake_case
             
             next unless should_continue
             
-            puts "adding function #{f_n}"            
+            debug "adding function #{f_n}"            
             @ffi_functions.push({:r_name => r_name, :c_name => f_n, :c_args => ffi_args, :c_ret_type => ret_type}) 
             
           end

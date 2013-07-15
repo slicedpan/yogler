@@ -41,6 +41,8 @@ module Yogler
 
       @base_module.class_eval str
       
+      puts header_parser.callbacks
+      
     end       
       
     def self.included(includer)

@@ -7,7 +7,7 @@ module Yogler
   include LibLoader
   
   #load_lib :glfw
-  #load_lib :glew
+  load_lib :glew
 
   class Engine
     def run
