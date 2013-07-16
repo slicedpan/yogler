@@ -12,3 +12,11 @@ glew:
   module_name: "GLEW"
   prefix: "glew"
   function_list_filename: "glew_funcs"
+  object_list_filename: "glew_objs"
+  
+gl:
+  lib_name: "GL"
+  header_filename: "gl-preprocessed"
+  module_name: "GL"
+  prefix: "gl"
+  function_list_filename: "gl_funcs"

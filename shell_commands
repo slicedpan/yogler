@@ -1,3 +1,5 @@
 nm /usr/lib/libglfw.so -g -f 'posix' | grep 'glfw' | awk -e '{ print $1 }' > filename
 
-readelf -s <file> | awk -e '{if ($7 != "UND") {print $8}}' 
+readelf -s <file> | awk -e '{if ($4 == "FUNC" && $7 != "UND") {print $8}}'  #functions
+
+readelf -t --wide libGLEW.so -s | awk '{ if ($4 == "OBJECT" && $7 != "UND") { print $8 } }' #objects

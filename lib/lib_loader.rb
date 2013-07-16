@@ -4,6 +4,12 @@ require 'ffi'
 module Yogler
   module LibLoader
   
+    TESTING = true
+    
+    def self.debug(arg)
+      puts arg if TESTING
+    end
+  
     def self.libs
       @libs || {}
     end
@@ -17,31 +23,31 @@ module Yogler
         opts["header_filename"] = "data/libs/#{opts['header_filename']}"
       end
       
+      debug opts
+      
       function_string = ""
       
       header_parser = HeaderParser.new(opts)
       header_parser.parse
       header_parser.functions.each do |c_f|
-        puts "adding function: #{c_f[:r_name]}"
+        debug "adding function: #{c_f[:r_name]}"
         function_string << "attach_function :#{c_f[:r_name]}, "
         function_string << ":#{c_f[:c_name]}, ["
         function_string << c_f[:c_args].map{|arg| ":#{arg}"}.join(", ")
         function_string << "], :#{c_f[:c_ret_type]}\n"
       end
       
+      if !@base_module.included_modules.include? FFI::Library
+        @base_module.extend FFI::Library
+      end
       str = "
-        module #{opts['module_name']}
-          extend FFI::Library
           ffi_lib '#{opts['lib_name']}'
           #{function_string}
-        end
       "
       
-      puts str
+      debug str
 
       @base_module.class_eval str
-      
-      puts header_parser.callbacks
       
     end       
       

@@ -1,0 +1,4 @@
+_XUnlockMutex_fn
+_XLockMutex_fn
+_Xglobal_lock
+stderr@GLIBC_2.2.5

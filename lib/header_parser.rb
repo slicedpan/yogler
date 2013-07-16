@@ -22,9 +22,9 @@ module Yogler
   
   class HeaderParser
     
-    attr_accessor :typedefs, :type_conv, :callbacks
+    attr_accessor :typedefs, :type_conv, :callbacks, :header_lines
     
-    TESTING = true
+    TESTING = false
     
     def debug(arg)
       if TESTING
@@ -35,16 +35,27 @@ module Yogler
     def initialize(opts) 
       @typedefs = []     
       File.open(opts['header_filename']) do |file|
-        @header_lines = file.each_line.to_a.map do |l| 
-          l.gsub!("extern", "")
-          l.gsub!(/__attribute__ \(.*\) /, "")
-          l.rstrip.lstrip
+        text = file.read
+        text.gsub!(/^#.*$/, "")
+        text.gsub!(/extern /, "")
+        text.gsub!(/__attribute__ ?\(.*\) /, "")
+        
+        @header_lines = text.split(";").map do |l| 
+          l.gsub!(/\s+/, " ")
+          l.rstrip!
+          l.lstrip!
+          l.gsub!(/ \(|\( /, "(")
+          l.gsub!(/ \)|\) /, ")")
+          l << ";"
           if l.match "typedef"          
             @typedefs.push l
           end
           l
         end
       end
+      
+      @object_list = opts['object_list']
+
       
       @type_conv = {}
       @callbacks = {}
@@ -53,6 +64,9 @@ module Yogler
       @function_names = opts['function_list']
       @ffi_functions = []
       @prefix = opts['prefix']
+      @objects = []
+      
+      
     end
     
     def check_callback(type)
@@ -167,8 +181,23 @@ module Yogler
         return            
       end
     end
-
+    
     def parse
+      parse_functions
+      parse_objects if @object_list
+    end
+    
+    def parse_objects
+      @object_list.each do |o_n|
+        @header_lines.each do |t|
+          if t.match " #{o_n};"
+            puts "matched #{t}"
+          end
+        end
+      end 
+    end
+
+    def parse_functions
       @function_names.each do |f_n|
         debug "match string: ' #{f_n}'"
         @header_lines.each do |t|

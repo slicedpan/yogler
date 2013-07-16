@@ -1,13 +1,12 @@
 $:.push File.dirname(__FILE__)
 require 'header_parser'
 require 'lib_loader'
+require 'glew_lib'
+require 'glfw_lib'
 
 module Yogler
 
-  include LibLoader
-  
-  #load_lib :glfw
-  load_lib :glew
+
 
   class Engine
     def run
