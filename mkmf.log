@@ -1,0 +1,27 @@
+--------------------
+
+for GLFW/glfw3.h... -------------------- yes
+
+checked program was:
+/* begin */
+1: #include "ruby.h"
+2: 
+3: #include <GLFW/glfw3.h>
+/* end */
+
+/include/capi/ruby/backward -I/home/owen/.rvm/rubies/rbx-2.2.6/vm/include/capi -Iext/yogler  -g -O2 -fPIC  conftest.c -o conftest.i"
+t);
+10:   }
+11: 
+12:   return 0;
+13: }
+/* end */
+
+}
+11: 
+12:   return 0;
+13: }
+/* end */
+
+"gcc -o conftest -I/home/owen/.rvm/rubies/rbx-2.2.6/vm/include/capi -I/home/owen/.rvm/rubies/rbx-2.2.6/vm/include/capi/ruby/backward -I/home/owen/.rvm/rubies/rbx-2.2.6/vm/include/capi -Iext/yogler  -g -O2 -fPIC conftest.c  -L. -L/home/owen/.rvm/rubies/rbx-2.2.6/lib -Wl,-R/home/owen/.rvm/rubies/rbx-2.2.6/lib  -Wl,--export-dynamic -lrt -lcrypt -ldl -lpthread    -lGLEW -lglfw   -lGL -lGLEW -lglfw   "
+

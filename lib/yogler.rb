@@ -1,17 +1,9 @@
-$:.push File.dirname(__FILE__)
-require 'header_parser'
-require 'lib_loader'
-require 'glew_lib'
-require 'glfw_lib'
+require_relative '../ext/yogler/yogler.so'
 
 module Yogler
-
-
-
   class Engine
     def run
-      @window = GLFW.create_window(640, 480, "Hello world", nil, nil)
-      GLFW.make_context_current(@window)
+      
     end
   end
 end
